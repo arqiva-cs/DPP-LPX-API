@@ -1,0 +1,360 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Live Media Event Sharing API",
+    "description" : "Using this API Broadcasters would be able to publish future media events via the DPP LPX API so that authenticated customers can consume event information.",
+    "version" : "1.0"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "paths" : {
+    "/event" : {
+      "get" : {
+        "summary" : "Get interests for the event",
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Interest"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Event not found"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Advertise a new live event",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Event"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Event created"
+          },
+          "400" : {
+            "description" : "Invalid input"
+          }
+        }
+      }
+    },
+    "/event/search" : {
+      "get" : {
+        "summary" : "Search for events",
+        "parameters" : [ {
+          "name" : "location",
+          "in" : "query",
+          "description" : "Location to filter events",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "eventType",
+          "in" : "query",
+          "description" : "Event type to filter events",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Limit the number of events returned, defaults to 1000",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "default" : 1000
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid input"
+          }
+        }
+      }
+    },
+    "/event/{eventId}" : {
+      "get" : {
+        "summary" : "Find event by ID",
+        "parameters" : [ {
+          "name" : "eventId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Event"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Event not found"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update an existing event",
+        "parameters" : [ {
+          "name" : "eventId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Event"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation"
+          },
+          "400" : {
+            "description" : "Invalid input"
+          },
+          "404" : {
+            "description" : "Event not found"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Deletes an event",
+        "parameters" : [ {
+          "name" : "eventId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Event deleted"
+          },
+          "404" : {
+            "description" : "Event not found"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Event" : {
+        "type" : "object",
+        "properties" : {
+          "uri" : {
+            "type" : "string"
+          },
+          "standard" : {
+            "$ref" : "#/components/schemas/Event_standard"
+          },
+          "firstcreated" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "language" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "representationtype" : {
+            "type" : "string"
+          },
+          "pubstatus" : {
+            "type" : "string"
+          },
+          "urgency" : {
+            "type" : "integer"
+          },
+          "headlines" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Event_headlines"
+            }
+          },
+          "profile" : {
+            "type" : "string"
+          },
+          "copyrightholder" : {
+            "type" : "string"
+          },
+          "copyrightnotice" : {
+            "type" : "string"
+          },
+          "usageterms" : {
+            "type" : "string"
+          },
+          "slugline" : {
+            "type" : "string"
+          },
+          "bodies" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Event_bodies"
+            }
+          },
+          "genres" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Event_genres"
+            }
+          },
+          "subjects" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Event_subjects"
+            }
+          },
+          "by" : {
+            "type" : "string"
+          },
+          "located" : {
+            "type" : "string"
+          },
+          "altids" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Event_headlines"
+            }
+          },
+          "ednote" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Interest" : {
+        "type" : "object",
+        "properties" : {
+          "eventId" : {
+            "type" : "string"
+          },
+          "userId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Event_standard" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          },
+          "schema" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Event_headlines" : {
+        "type" : "object",
+        "properties" : {
+          "role" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Event_bodies" : {
+        "type" : "object",
+        "properties" : {
+          "charcount" : {
+            "type" : "integer"
+          },
+          "wordcount" : {
+            "type" : "integer"
+          },
+          "role" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Event_genres" : {
+        "type" : "object",
+        "properties" : {
+          "uri" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Event_subjects" : {
+        "type" : "object",
+        "properties" : {
+          "rel" : {
+            "type" : "string"
+          },
+          "uri" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
